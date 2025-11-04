@@ -1,36 +1,10 @@
-<<<<<<< HEAD
-site_name: Mealie-k3s Deployment
-site_description: "Documentation for the mealie-k3s Helm chart."
-site_author: "Your Name"
-=======
 name: Deploy Docs to GitHub Pages
->>>>>>> gh-pages
 
-theme:
-  name: material
-  palette:
-    # Light mode
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    # Dark mode
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
+on:
+  push:
+    branches:
+      - main # Trigger the build only on pushes to main
 
-<<<<<<< HEAD
-repo_url: https://github.com/YOUR-USERNAME/mealie-k3s
-edit_uri: edit/main/docs/
-
-# --- Navigation ---
-nav:
-  - 'Overview': 'index.md'
-  - 'Deployment Guide': 'deployment.md'
-=======
 # This gives the action permission to write to your repo
 permissions:
   contents: write
@@ -52,4 +26,3 @@ jobs:
 
       - name: Build and Deploy
         run: mkdocs gh-deploy --force --clean
->>>>>>> gh-pages
