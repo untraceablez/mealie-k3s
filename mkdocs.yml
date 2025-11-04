@@ -1,9 +1,7 @@
-# mkdocs.yml
-site_name: Mealie-k3s Docs
+site_name: Mealie-k3s Deployment
 site_description: "Documentation for the mealie-k3s Helm chart."
-site_author: "Taylor Cohron"
+site_author: "Your Name"
 
-# Use the Material theme
 theme:
   name: material
   palette:
@@ -20,10 +18,9 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
 
-# The "repo_url" and "edit_uri" add the "Edit on GitHub" link
-repo_url: https://github.com/untraceablez/mealie-k3s
+repo_url: https://github.com/YOUR-USERNAME/mealie-k3s
 edit_uri: edit/main/docs/
 
-# Navigation structure
 nav:
   - 'Overview': 'index.md'
+  - 'Deployment Guide': 'deployment.md'
