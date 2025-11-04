@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+.env
+venv/
+
+# MKDocs
+site/
+
+# Helm
+chart/charts/
+chart/*.tgz

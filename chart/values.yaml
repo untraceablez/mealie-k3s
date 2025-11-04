@@ -1,0 +1,92 @@
+# -----------------------------------------------------------------
+# Mealie Application Configuration
+# -----------------------------------------------------------------
+mealie:
+  image:
+    repository: hkotel/mealie
+    tag: "nightly" # Or a specific version tag
+    pullPolicy: IfNotPresent
+  
+  service:
+    type: LoadBalancer # This tells Kubernetes to request an IP from MetalLB
+    port: 80
+
+  # Environment variables for Mealie
+  # See: https://docs.mealie.io/documentation/getting-started/installation/backend-config/
+  env:
+    # General
+    PUID: "1000"
+    PGID: "1000"
+    TZ: "Etc/UTC"
+    BASE_URL: "" # Update this if you use a domain
+
+    # Database Settings
+    # These values are pulled from the 'postgresql' dependency below
+    DB_TYPE: "postgres"
+    POSTGRES_HOST: "{{ .Release.Name }}-postgresql" # Service name of the Postgres chart
+    POSTGRES_PORT: "5432"
+    
+    # We will create a new database and user in the postgresql chart
+    POSTGRES_DB: "mealie"
+    POSTGRES_USER: "mealie"
+    
+    # IMPORTANT: This pulls the password directly from the dependency's values
+    # This ensures you only have to define the password in one place.
+    POSTGRES_PASSWORD:
+      secretKeyRef:
+        # The secret is created by the Bitnami chart
+        name: "{{ .Release.Name }}-postgresql" 
+        key: postgres-password
+
+# -----------------------------------------------------------------
+# Dependency: PostgreSQL (Bitnami)
+# -----------------------------------------------------------------
+postgresql:
+  enabled: true
+  
+  # Global settings for the Bitnami chart
+  global:
+    storageClass: "" # Specify a storageClass or let the default be used
+  
+  # Settings for the primary database instance
+  primary:
+    persistence:
+      enabled: true
+      size: 8Gi # Adjust as needed
+
+  # Authentication settings
+  # This creates the 'postgres' superuser AND our 'mealie' user
+  auth:
+    # Set the password for the 'postgres' superuser (REQUIRED)
+    postgresPassword: "change-this-strong-password"
+    
+    # Create the dedicated 'mealie' database and user
+    database: "mealie"
+    username: "mealie"
+    password: "change-this-strong-mealie-password"
+
+    # We must also pass the mealie password to the existingSecret
+    # so the Mealie deployment's 'secretKeyRef' can find it.
+    # This is a quirk of how the Bitnami chart works.
+    # NOTE: This only works on initial deployment.
+    existingSecret: "change-this-strong-mealie-password"
+
+# -----------------------------------------------------------------
+# Dependency: MetalLB
+# -----------------------------------------------------------------
+metallb:
+  enabled: true
+  
+  # CRDs are required for MetalLB
+  crds:
+    enabled: true
+
+  # This is the most important part of the MetalLB config.
+  # You MUST provide an IP range on your local network
+  # that is NOT used by your router's DHCP.
+  configInline:
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      - "192.168.1.240-192.168.1.250" # !!! <--- CHANGE THIS IP RANGE

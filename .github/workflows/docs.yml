@@ -1,0 +1,29 @@
+##docs.yml file for GitHub Pages
+name: Deploy Docs to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # Trigger the build only on pushes to main
+
+permissions:
+  contents: write # Allow the action to write to the gh-pages branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      
+      - name: Install MKDocs
+        run: pip install mkdocs mkdocs-material
+
+      - name: Build and Deploy
+        # This command builds the site and pushes it to the gh-pages branch
+        run: mkdocs gh-deploy --force --clean

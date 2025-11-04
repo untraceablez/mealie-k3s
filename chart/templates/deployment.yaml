@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-mealie
+  labels:
+    app: mealie
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mealie
+  template:
+    metadata:
+      labels:
+        app: mealie
+    spec:
+      containers:
+      - name: mealie
+        image: "{{ .Values.mealie.image.repository }}:{{ .Values.mealie.image.tag }}"
+        imagePullPolicy: {{ .Values.mealie.image.pullPolicy }}
+        ports:
+        - containerPort: 9000
+        env:
+        - name: PUID
+          value: {{ .Values.mealie.env.PUID | quote }}
+        - name: PGID
+          value: {{ .Values.mealie.env.PGID | quote }}
+        - name: TZ
+          value: {{ .Values.mealie.env.TZ | quote }}
+        - name: BASE_URL
+          value: {{ .Values.mealie.env.BASE_URL | quote }}
+        - name: DB_TYPE
+          value: {{ .Values.mealie.env.DB_TYPE | quote }}
+        - name: POSTGRES_HOST
+          value: {{ .Values.mealie.env.POSTGRES_HOST | quote }}
+        - name: POSTGRES_PORT
+          value: {{ .Values.mealie.env.POSTGRES_PORT | quote }}
+        - name: POSTGRES_DB
+          value: {{ .Values.mealie.env.POSTGRES_DB | quote }}
+        - name: POSTGRES_USER
+          value: {{ .Values.mealie.env.POSTGRES_USER | quote }}
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mealie.env.POSTGRES_PASSWORD.secretKeyRef.name }}
+              key: {{ .Values.mealie.env.POSTGRES_PASSWORD.secretKeyRef.key }}
+        volumeMounts:
+        - name: mealie-data
+          mountPath: /app/data
+      volumes:
+      - name: mealie-data
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-mealie-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-mealie-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi # Adjust data volume size as needed
+  # storageClassName: "" # Specify a storageClass if needed

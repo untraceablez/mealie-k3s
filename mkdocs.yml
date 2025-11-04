@@ -1,0 +1,29 @@
+# mkdocs.yml
+site_name: Mealie-k3s Docs
+site_description: "Documentation for the mealie-k3s Helm chart."
+site_author: "Taylor Cohron"
+
+# Use the Material theme
+theme:
+  name: material
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+# The "repo_url" and "edit_uri" add the "Edit on GitHub" link
+repo_url: https://github.com/untraceablez/mealie-k3s
+edit_uri: edit/main/docs/
+
+# Navigation structure
+nav:
+  - 'Overview': 'index.md'

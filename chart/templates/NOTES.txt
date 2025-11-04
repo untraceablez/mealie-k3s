@@ -1,0 +1,10 @@
+Your Mealie instance has been deployed!
+
+1.  MetalLB is provisioning an IP address. Get the external IP by running:
+    kubectl get svc {{ .Release.Name }}-mealie-svc -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+
+2.  Wait a few minutes for the application and database to start, then open the IP address in your browser.
+
+3.  Default login credentials (from Mealie docs):
+    Username: changeme@example.com
+    Password: MyPassword
