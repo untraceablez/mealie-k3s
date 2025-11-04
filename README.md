@@ -1,4 +1,4 @@
-# Mealie-k3s 🍳
+# mealie-k3s 🍳
 
 A self-contained Helm chart to deploy the [Mealie](https://docs.mealie.io/) recipe manager on Kubernetes (k3s, k8s, microk8s) with a single command.
 
